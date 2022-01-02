@@ -11,7 +11,6 @@ from fsm import TocMachine
 from utils import send_text_message, send_image_message, myAddress
 
 load_dotenv()
-#myAddress = 'https://9e89-218-166-130-174.ngrok.io'
 machine = TocMachine(
     states=["user", "state1", "state2", "joke", "drink", "selectStore"],
     transitions=[
@@ -23,7 +22,7 @@ machine = TocMachine(
         },
         {
             "trigger": "advance",
-            "source": "user",
+            "source": "state1",
             "dest": "state2",
             "conditions": "is_going_to_state2",
         },
@@ -47,7 +46,7 @@ machine = TocMachine(
         },
         {
             "trigger": "go_back",
-            "source": ["state1", "state2", "joke", "selectStore"],
+            "source": ["state2", "joke", "selectStore"],
             "dest": "user"
         },
     ],
@@ -130,7 +129,11 @@ def webhook_handler():
                 send_image_message(event.reply_token, fsmAddress)
             elif machine.state == 'user':
                 send_text_message(event.reply_token,
-                                  '輸入『講笑話』或 『joke』可獲得笑話一則\n輸入『喝飲料』或『drink』獲得飲料店資訊\n')
+                                  '輸入『講笑話』或 『joke』可獲得笑話一則\n輸入『喝飲料』或『drink』獲得飲料店資訊\n輸入『fsm』可取得當前fsm圖片\n輸入『選擇障礙』可以問個是非題，讓我幫你決定！')
+            elif machine.state == 'drink':
+                send_text_message(event.reply_token,
+                                  "輸入店名可取得該店「台南地區」菜單，目前本服務提供的店家有:\n\n迷客夏\n五十嵐\n圓石\n鮮茶道\n\n其餘店家持續更新中...\n不知道喝什麼就輸入『不知道』，將提供您隨機菜單！")
+
             else:
                 send_text_message(event.reply_token, "Not Entering any State")
 

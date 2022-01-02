@@ -1,5 +1,5 @@
 from transitions.extensions import GraphMachine
-from utils import send_text_message, send_image_message, myAddress
+from utils import send_sticker_message, send_text_message, send_image_message, myAddress
 
 import random
 
@@ -41,51 +41,47 @@ class TocMachine(GraphMachine):
         print("I'm entering drink")
         reply_token = event.reply_token
         send_text_message(
-            reply_token, "輸入店名可取得該店『台南地區』菜單，目前本服務提供的店家有:\n\n迷客夏\n五十嵐\n圓石\n鮮茶道\n\n其餘店家持續更新中")
+            reply_token, "輸入店名可取得該店「台南地區」菜單，目前本服務提供的店家有:\n\n迷客夏\n五十嵐\n圓石\n鮮茶道\n\n其餘店家持續更新中...\n如果不知道喝什麼就輸入『不知道』，將提供您隨機菜單！")
         #thestore = "已取得" + random.choice(stores) + "的菜單"
         #send_text_message(reply_token, thestore)
         # self.go_back()
 
     def is_going_to_selectStore(self, event):
         text = event.message.text
-        '''if text in stores:
-            thestore = "已取得" + text + "的菜單"
-            send_text_message(event.reply_token, thestore)'''
-
         return (text in stores)
 
     def on_enter_selectStore(self, event):
         print("I'm entering select")
         text = event.message.text
         reply_token = event.reply_token
-        thestore = "已取得" + text + "的菜單"
-        menuIndex = stores.index(text)
-        #send_text_message(reply_token, thestore)
-        #imgAddress = myAddress + '/img/' + menus[0]
-        #send_text_message(reply_token, imgAddress)
-        #imgAddress = myAddress + '/'
-        #send_image_message(event.reply_token, imgAddress)
+        #thestore = "已取得" + text + "的菜單"
+        if text == "不知道":
+            menuIndex = random.randint(0, len(menus))
+        else:
+            menuIndex = stores.index(text)
         send_image_message(reply_token, menus[menuIndex])
         self.go_back()
 
     def is_going_to_state1(self, event):
         text = event.message.text
-        return ("新年" in text)
+        return ("選擇障礙" in text)
 
     def on_enter_state1(self, event):
         print("I'm entering state1")
         reply_token = event.reply_token
-        send_text_message(reply_token, "新年快樂！")
-        self.go_back()
+        send_text_message(reply_token, "想問什麼？我能幫你二選一喔！")
 
     def is_going_to_state2(self, event):
-        text = event.message.text
-        return ("熊家族" in text or "買" in text)
+        return 1
 
     def on_enter_state2(self, event):
         print("I'm entering state2")
         reply_token = event.reply_token
-        send_text_message(reply_token, "再買就剁手")
+        result = random.random()
+        if result < 0.5:
+            send_sticker_message(reply_token, '8525', '16581290')
+        else:
+            send_sticker_message(reply_token, '8522', '16581287')
         self.go_back()
 
     '''

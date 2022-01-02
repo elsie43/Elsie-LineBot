@@ -7,7 +7,7 @@ from linebot.models import StickerSendMessage, ImageCarouselTemplate, URITemplat
 
 channel_access_token = os.getenv("LINE_CHANNEL_ACCESS_TOKEN", None)
 myAddress = 'https://hwbotelsie.herokuapp.com'
-#myAddress = 'https://a1bf-218-166-130-174.ngrok.io'
+#myAddress = 'https://c38d-218-166-130-174.ngrok.io'
 
 
 def send_text_message(reply_token, text):

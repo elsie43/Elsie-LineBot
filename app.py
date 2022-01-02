@@ -124,12 +124,15 @@ def webhook_handler():
         print(f"REQUEST BODY: \n{body}")
         response = machine.advance(event)
         if response == False:
+            '''
             if event.message.text.lower() == 'fsm':
                 fsmAddress = myAddress + '/show-fsm'
                 send_image_message(event.reply_token, fsmAddress)
-            elif machine.state == 'user':
+            '''
+
+            if machine.state == 'user':
                 send_text_message(event.reply_token,
-                                  '輸入『講笑話』或 『joke』可獲得笑話一則\n輸入『喝飲料』或『drink』獲得飲料店資訊\n輸入『fsm』可取得當前fsm圖片\n輸入『選擇障礙』可以問個是非題，讓我幫你決定！')
+                                  '輸入『講笑話』或 『joke』可獲得笑話一則\n輸入『喝飲料』或『drink』獲得飲料店資訊\n輸入『選擇障礙』可以問個是非題，讓我幫你決定！')
             elif machine.state == 'drink':
                 send_text_message(event.reply_token,
                                   "輸入店名可取得該店「台南地區」菜單，目前本服務提供的店家有:\n\n迷客夏\n五十嵐\n圓石\n鮮茶道\n\n其餘店家持續更新中...\n不知道喝什麼就輸入『不知道』，將提供您隨機菜單！")
@@ -144,11 +147,6 @@ def webhook_handler():
 def show_fsm():
     machine.get_graph().draw("fsm.png", prog="dot", format="png")
     return send_file("fsm.png", mimetype="image/png")
-
-
-@app.route("/show-img", methods=["GET"])
-def show_img():
-    return send_file("img/presotea.jpg", mimetype="image/jpg")
 
 
 if __name__ == "__main__":

@@ -10,7 +10,16 @@ Template Code for TOC Project 2020
 A Line bot based on a finite state machine
 
 More details in the [Slides](https://hackmd.io/@TTW/ToC-2019-Project#) and [FAQ](https://hackmd.io/s/B1Xw7E8kN)
-
+## 使用說明
+此 Line Bot 提供以下三種服務：
+- 講笑話
+    現代人生活壓力大，Line Bot 讓你不用上 ptt 也能會心一笑！
+    - 輸入```講笑話``` 或是 ```joke``` 可提供笑話一則，結束後返回initial state
+- 查詢飲料店菜單
+平常上 google map 查飲料店菜單覺得累？Line Bot 幫你先找好！
+    - 輸入```喝飲料``` 或是 ```drink``` ，Line Bot 將回傳指定飲料店菜單；選擇困難者 Line Bot 也能隨機推薦飲料店
+- Line Bot 幫你二選一
+    - 輸入```選擇障礙``` 可以問二選一的問題，Line Bot 將用貼圖回覆答案
 ## Setup
 
 ### Prerequisite
@@ -157,3 +166,4 @@ sudo snap install --classic heroku
 Flask Architecture ❤️ [@Sirius207](https://github.com/Sirius207)
 
 [Line line-bot-sdk-python](https://github.com/line/line-bot-sdk-python/tree/master/examples/flask-echo)
+

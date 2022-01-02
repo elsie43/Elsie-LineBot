@@ -8,12 +8,12 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 
 from fsm import TocMachine
-from utils import send_text_message
+from utils import send_text_message, send_image_message, myAddress
 
 load_dotenv()
-
+#myAddress = 'https://9e89-218-166-130-174.ngrok.io'
 machine = TocMachine(
-    states=["user", "state1", "state2"],
+    states=["user", "state1", "state2", "joke", "drink", "selectStore"],
     transitions=[
         {
             "trigger": "advance",
@@ -23,13 +23,31 @@ machine = TocMachine(
         },
         {
             "trigger": "advance",
-            "source": "state1",
+            "source": "user",
             "dest": "state2",
             "conditions": "is_going_to_state2",
         },
         {
+            "trigger": "advance",
+            "source": "user",
+            "dest": "joke",
+            "conditions": "is_going_to_joke",
+        },
+        {
+            "trigger": "advance",
+            "source": "user",
+            "dest": "drink",
+            "conditions": "is_going_to_drink",
+        },
+        {
+            "trigger": "advance",
+            "source": "drink",
+            "dest": "selectStore",
+            "conditions": "is_going_to_selectStore",
+        },
+        {
             "trigger": "go_back",
-            "source": ["state1", "state2"],
+            "source": ["state1", "state2", "joke", "selectStore"],
             "dest": "user"
         },
     ],
@@ -107,7 +125,14 @@ def webhook_handler():
         print(f"REQUEST BODY: \n{body}")
         response = machine.advance(event)
         if response == False:
-            send_text_message(event.reply_token, "Not Entering any State")
+            if event.message.text.lower() == 'fsm':
+                fsmAddress = myAddress + '/show-fsm'
+                send_image_message(event.reply_token, fsmAddress)
+            elif machine.state == 'user':
+                send_text_message(event.reply_token,
+                                  '輸入『講笑話』或 『joke』可獲得笑話一則\n輸入『喝飲料』或『drink』獲得飲料店資訊\n')
+            else:
+                send_text_message(event.reply_token, "Not Entering any State")
 
     return "OK"
 
@@ -116,6 +141,11 @@ def webhook_handler():
 def show_fsm():
     machine.get_graph().draw("fsm.png", prog="dot", format="png")
     return send_file("fsm.png", mimetype="image/png")
+
+
+@app.route("/show-img", methods=["GET"])
+def show_img():
+    return send_file("img/presotea.jpg", mimetype="image/jpg")
 
 
 if __name__ == "__main__":

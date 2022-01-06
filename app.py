@@ -12,13 +12,20 @@ from utils import send_text_message, send_image_message, myAddress
 
 load_dotenv()
 machine = TocMachine(
-    states=["user", "state1", "state2", "joke", "drink", "selectStore"],
+    states=["user", "state1", "state2", "joke",
+            "drink", "selectStore", "state3"],
     transitions=[
         {
             "trigger": "advance",
             "source": "user",
             "dest": "state1",
             "conditions": "is_going_to_state1",
+        },
+        {
+            "trigger": "advance",
+            "source": "user",
+            "dest": "state3",
+            "conditions": "is_going_to_state3",
         },
         {
             "trigger": "advance",
@@ -128,6 +135,7 @@ def webhook_handler():
             if event.message.text.lower() == 'fsm':
                 fsmAddress = myAddress + '/show-fsm'
                 send_image_message(event.reply_token, fsmAddress)
+
             '''
 
             if machine.state == 'user':

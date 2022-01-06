@@ -71,6 +71,16 @@ class TocMachine(GraphMachine):
         reply_token = event.reply_token
         send_text_message(reply_token, "想問什麼？我能幫你二選一喔！")
 
+    def is_going_to_state3(self, event):
+        text = event.message.text
+        return ("新年" in text)
+
+    def on_enter_state1(self, event):
+        print("I'm entering state3")
+        reply_token = event.reply_token
+        send_text_message(reply_token, "新年快樂！")
+        self.go_back()
+
     def is_going_to_state2(self, event):
         return 1
 
